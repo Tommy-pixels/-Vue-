@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>VUE学习测试</title>
+		<!--为了让 app10 active 有样式效果,这里写一个样式表-->
+		<style>
+			.active{
+				border: 1px solid red;
+			}
+		</style>
+	</head>
+	<body>
+	<!-- el挂载点 -->
+		
+		<!--id选择器-->
+		<div id = 'app0'>
+			{{message}}
+			<p>{{message}}</p>
+		</div>	
+		
+		<!--class选择器-->
+		<div class = 'app1'>{{message}}</div>
+		
+		<!--标签选择器-->
+		<h2>{{message}}</h2>
+
+		
+		<!--导入vue开发版本-->
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		
+		<script>
+			var app0 = new Vue({
+				el:'#app0',		//id作为选择器	
+				data:{
+					message:"hello vue! app0"
+				}
+			})
+			
+			var app1 = new Vue({
+				el:'.app1',	//class作为选择器
+				data:{
+					message:'hello vue! app1'
+				}
+			})
+			
+			var app2 = new Vue({
+				el:'h2',	//h2作为标签选择器
+				data:{
+					message:"hello vue! 标签选择器"
+				}
+			})
+		</script>
+		
+	<!-- data:数据对象 -->
+		<div id="app3">
+			{{message}}
+			<h2>{{obj}}</h2>
+			<ul>
+				<li>
+					{{campus[0]}}
+				</li>
+			</ul>
+		</div>
+		<script>
+			var app3 = new Vue({
+				el:'#app3',
+				data:{
+					message:"data:数据对象之普通数据",
+					obj:{
+						name:"Test data:数据对象之复杂数据类型",
+						mobile:"123456789"
+					},
+					campus:["仙溪小区","江湾校区"]
+				}
+			})
+			
+		</script>
+	
+	<!-- Vue指令 -->	
+	<!-- Vue 指令之v-text 设置标签的 文本值-->
+		<div id="app4">
+			<!--v-text指令会替换全部内容，{{}}形式则可以实现部分替换-->
+			<h2 v-text="message">测试内容，这一句会完全被替换掉</h2>
+			<h2>{{message}}测试内容，这一句不会被完全替换掉</h2>
+			<!--v-text指令内可以添加表达式-->
+			<h2 v-text="message+'!!!!!!'"></h2>
+		</div>	
+		<script>
+			var app4 = new Vue({
+				el:'#app4',
+				data:{
+					message:" Vue指令之v-text "
+				}
+			})
+		</script>
+	
+	<!--Vue 指令之v-html 设置标签的innerHTML-->
+		<div id = "app5">
+			<p v-html="content"></p>
+		</div>
+		<script>
+			var app5 = new Vue({
+				el:"#app5",
+				data:{
+//					content:"v-html测试"
+					content:"<a href='#'>v-html测试</a>"
+				}
+			})
+		</script>
+	
+	<!--Vue 指令之v-on 为元素绑定事件-->
+		<div id="app6">
+			<p>{{message}}</p>
+			<!-- v-on 写法一 -->
+			<button v-on:click="reverseMsg">反转消息</button>	
+			<!-- v-on 写法二 -->
+			<input type="button" value="v-on测试" @click="doId">
+		</div>
+		<script>
+			var app6 = new Vue({
+				el: '#app6',
+			  	data: {
+			    	message: 'Hello Vue.js!'
+			  	},
+			  	methods: {
+			    	reverseMsg: function () {
+			    		//用this即可获取到data的数据
+			      		this.message = this.message.split('').reverse().join('')
+			    	},
+			    	doId:function(){
+			    		alert('v-on')
+			    	}
+			  	}
+			})
+		</script>
+		
+	<!-- v-text、 v-html 、 v-on 案例 -->
+	<div id="app7">
+		<h2>计数器</h2>
+		<div class = "input-num">
+			<button v-on:click="sub">-</button>
+			<span>{{num}}</span>
+			<button v-on:click="add">+</button>
+		</div>
+	</div>
+	<script>
+		var app7 = new Vue({
+			el:"#app7",
+			data:{
+				num:1
+			},
+			methods:{
+				sub:function(){
+					console.log('add')
+					if(this.num > 0){
+						this.num -= 1 
+					}else{
+						alert("已达最小值0")
+					}
+				},
+				add:function(){
+					console.log('sub')
+					if(this.num < 10){
+						this.num += 1
+					}else{
+						alert("已达最大值10")
+					}
+				}
+			}
+		})
+	</script>
+	
+	<!-- Vue 指令之 v-show 根据表达值(支持用变量或者表达式)的真假，切换元素的显示和隐藏 -->
+	<div id="app8">
+		<!--<img src="#" v-show="true"> 	# 可以直接用布尔值，或者用变量，方便后面动态改动显示与否-->
+		<img v-show="isShow" src="#">		<!-- 使用表达式来响应v-show -->
+		<img v-show="age>=18" src="#"> 	
+		<input type="button" value="切换显示图片-改变age为8" v-on:click="changeIsShow0">
+		<button v-on:click="changeIsShow1">切换显示图片-改变isShow布尔值</button>
+	</div>
+	<script>
+		var app8 = new Vue(
+			{
+				el:"#app8",
+				data:{
+					isShow:false,		//使用变量响应v-show指令
+					age:18			//使用表达式
+				},
+				methods:{
+					changeIsShow0:function(){
+						if(this.age>=18){
+							this.age = 8
+						}else{
+							this.age = 18
+						}
+					},
+					changeIsShow1:function(){
+						this.isShow = !this.isShow
+					}
+				}
+			}
+		)
+	</script>
+	
+	<!-- Vue指令之v-if 
+		更具表达值的真假，切换元素的显示和隐藏（操纵dom元素） 
+		// v-if 是一个指令，所以必须将它添加到一个元素上。
+		但是如果想切换多个元素呢？此时可以把一个 <template> 元素当做不可见的包裹元素，并在上面使用 v-if
+	-->
+	<div id = "app9">
+		<p v-if="true">测试v-if————固定布尔值</p>
+		<p v-if="isShow">测试v-if————响应变量</p>
+		<button v-on:click="changeBoolean">切换v-if响应变量布尔值</button>
+	</div>
+	<script>
+		var app9 = new Vue(
+			{
+				el:"#app9",
+				data:{
+					isShow:false
+				},
+				methods:{
+					changeBoolean:function(){
+						this.isShow = !this.isShow;
+					}
+				},
+			}
+		)
+	</script>
+	
+	<!--
+		v-else 用于表示 v-if 的“else 块”
+		注意：v-else 元素必须紧跟在带 v-if 或者 v-else-if 的元素的后面，否则它将不会被识别。
+	-->
+	<!--例子：-->
+	<div v-if="Math.random()>0.5">
+		Now u see me
+	</div>
+	<div v-else>
+		Now u don't
+	</div>
+	
+	<!--
+		v-else-if 充当 v-if 的“else-if块”
+	-->
+	
+	<!-- Vue指令值v-bind 设置元素的属性（如：src、title、class） -->
+	<div id="app10">
+		<img v-bind:src="imgSrc" v-bind:title="imgTitle+'!!!!!'" v-bind:class="isActive?'active':''" v-on:click="toggleActive">
+		<br>
+		<img :src="imgSrc" v-bind:class="{active:isActive}" @click="toggleActive">		<!-- v-bind简写--> <!--三元表达式换成对象的写法-->	
+	</div>
+	<script>
+		var app10=new Vue(
+			{
+				el:"#app10",
+				data:{
+					imgSrc:"https://cn.vuejs.org/images/logo.png",
+					imgTitle:"v-bind:title测试",
+					isActive:false
+				},
+				methods:{
+					toggleActive:function(){
+						console.log("0000")
+						this.isActive=!this.isActive;
+					}
+				}
+				
+			}
+		)
+	</script>
+	
+	<!-- 
+		v-show、v-if、v-bind 案例之图片切换  
+		ps:
+			v-show的元素始终会被渲染并保留在 DOM 中。
+			v-show 只是简单地切换元素的 CSS property display
+		分析以下需要什么指令，该如何做
+	-->
+	<div id="app11">
+		<a href="javascript:void(0)" v-on:click="prev" v-show="index!=0">上一张</a>
+		<img v-bind:src="imgArr[index]">
+		<a href="javascript:void(0)" v-on:click="next" v-show="index<imgArr.length-1">下一张</a>
+	</div>
+	<script>
+		var app11=new Vue(
+			{
+				el:"#app11",
+				data:{
+					imgArr:[
+						"https://cn.vuejs.org/images/logo.png",
+						"https://cn.vuejs.org/images/components.png",
+						"https://static.bookstack.cn/projects/notes-python/ed182f04615ca814567ef002eec8a043.png",
+						"https://pic1.zhimg.com/80/v2-b713ab7ee0bd8ceb4014517df9832290_720w.jpg",
+						"https://pic2.zhimg.com/80/v2-1789364632397bc978df63df501f9561_720w.jpg"
+					],
+					index:0,
+					hiddenL:false,
+					hiddenR:false,
+					imgSrc:"https://cn.vuejs.org/images/logo.png"
+				},
+				methods:{
+					prev:function(){
+						if(this.index>0){
+							this.index -= 1 
+							this.imgSrc = this.imgArr[this.index]
+						}else{
+							this.hiddenL = !this.hiddenL
+						}
+					},
+					next:function(){
+						if(this.index<5){
+							this.index += 1
+							this.imgSrc = this.imgArr[this.index]
+						}else{
+							this.hiddenR = !this.hiddenR
+						}
+					}
+				}
+			}
+		)
+	</script>
+	
+	<!-- 
+		列表渲染:
+		Vue指令之v-for 根据数据生成列表结构 
+	-->
+	<div id="app12">
+		<button v-on:click="add">添加数据</button>
+		<button v-on:click="remove">移除数据</button>
+		<ul>
+			<p>数组是列表的情况：</p>
+			<li> index  num</li>
+			<li v-for="item in arr">{{item}}</li>
+			<!--可以用 of 作为分隔符代替 in ，of更接近 JavaScript 迭代器的语法-->
+		</ul>
+		<ul>
+			<li v-for="(item, index) in arr">{{index}}    {{item}}</li>	<!--通过索引占位-->
+		</ul>
+		<ul>
+			<p>数组是对象的情况：</p>
+			<li> index      name     age</li>
+			<li v-for="(item, index) in objArr">{{index}}       {{item.name}}       {{item.age}}</li>	<!--通过索引占位-->
+		</ul>
+		
+	</div>
+	<script>
+		var app12 = new Vue(
+			{
+				el:"#app12",
+				data:{
+					arr:[1,2,3,4,5],
+					objArr:[
+					{name:"JJ",age:7},
+					{name:"GG",age:8}
+					]
+				},
+				methods:{
+					//添加和删除数据
+					add:function(){
+						this.objArr.push({name:"QQ", age:10});
+					},
+					remove:function(){
+						this.objArr.shift();
+					}
+				}
+			}
+		)
+	</script>
+	
+	<!--提供第二参数为 property 名称 (也就是键名)-->
+	<ul id = "v-for-object">
+		<li v-for="(value, key) in object">
+			{{key}}: {{value}}
+		</li>
+	</ul>
+	<script>
+		new Vue({
+			el:'#v-for-object',
+			data:{
+				object:{
+					title:'aa',
+					author:'Jan',
+					publishedAt:'2020-04-05'
+				}
+			}
+		})
+	</script>
+	
+	<!--
+	列表渲染 
+		- 显示过滤/排序后的结果
+			有时候想要显示一个数组经过过滤或排序后的版本，而不实际变更或重置原始数据。
+		在这种情况下，可以创建一个计算属性，来返回过滤或排序后的数组。
+		例子：
+		<li v-for="n in evenNumbers">{{n}}</li>
+		
+		data:{
+			numbers:[1,2,3,4,5]
+		},
+		computed:{
+			evenNumbers:function(){
+				return this.numbers.filter(function(number){
+					return number % 2 === 0 
+				})
+			}
+		}
+		
+		计算属性不适用的情况下 (例如，在嵌套 v-for 循环中) 你可以使用一个方法
+		ps:嵌套v-for循环中不适用嵌套属性？？
+		<ul v-for="set in sets">
+			<li v-for="n in even(set)">{{n}}</li>
+		</ul>
+		
+		data:{
+			sets:[[1,2,3,4,5],[6,7,8,9,10]]
+		},
+		methods:{
+			even:function(numbers){
+				return numbers.filter(function(number){
+					return number %2===0
+				})
+			}
+		}
+		
+		- 在<template>上使用v-for
+			类式于v-if，可以利用带有v-for的<template>来循环渲染一段包含多个元素的内容
+			例如：
+				<ul>
+					<template v-for="item in items">
+						<li>{{item.msg}}</li>
+						<li class="divider" role="presentation"></li>
+					</template>
+				</ul>
+		
+		- 不推荐在同一元素上使用v-if和v-for
+			当它们处于同一节点，v-for 的优先级比 v-if 更高，
+			这意味着 v-if 将分别重复运行于每个 v-for 循环中。
+		
+		- 在组件上使用v-for
+			
+		
+	-->
+	
+	
+	<!-- Vue指令之v-on补充———— 自定义参数-->
+	<div id="app13">
+		<button v-on:click="doIt('测试 自定义参数', 2)">
+			点击传递自定义参数
+		</button>
+	</div>
+	<script>
+		var app13=new Vue(
+			{
+				el:"#app13",
+				data:{
+					
+				},
+				methods:{
+					doIt:function(p1,p2){	  //这里的p1,p2就是自定义的形参变量,点击按钮参数会传递到这里
+						console.log(p1+"  "+p2);
+					}
+				}
+				
+			}
+		)
+	</script>
+	<!-- Vue指令之v-on补充———— 事件修饰符-->
+	<!--事件修饰符并不仅仅只有keyup,更多的可以参考 https://cn.vuejs.org/v2/api/#v-on-->
+	<div id = "app14">
+		<input type="text" @keyup="sayHi"/>
+		<input type="text" @keyup.enter="sayHi"/>
+	</div>
+	<script>
+		var app14 = new Vue(
+			{
+				el:"#app14",
+				methods:{
+					sayHi:function(){
+						alert("测试事件修饰符");
+					}
+				}
+			}
+		)
+	</script>
+	<!-- Vue指令之v-model 把表单元素的值和实例中的数据关联起来——获取和设置表单元素的值（双向元素绑定） -->
+	
+	<div id = "app15">
+		<button @click="setM">设置message值为000000</button>
+		<!--以表单元素文本框为例-->
+		<input type="text" v-model="message" @keyup.enter="getM"/>
+		<h2>{{message}}</h2>
+	</div>
+	
+	<script>
+		var app15 = new Vue({
+			el:"#app15",
+			data:{
+				message:"测试v-model双向元素数据绑定"
+			},
+			methods:{
+				getM:function(){
+					alert(this.message);
+				},
+				setM:function(){
+					this.message = "000000";
+				}
+			}
+		}
+		)
+	</script>
+	
+	
+	<!-- Vue计算属性——computed -->
+	
+	
+	<!-- 
+	Vue 实例
+		- 数据与方法：
+			一个 Vue 实例被创建时，它将 data 对象中的所有的 property 加入到 Vue 的响应式系统中。
+		当这些 property 的值发生改变时，视图将会产生“响应”，即匹配更新为新的值。
+		注意：
+			只有当实例被创建时就已经存在于 data 中的 property 才是响应式的。
+		也就是说如果你添加一个新的 property，对 b的改动将不会触发任何视图的更新。
+		
+		若后续需要一个 property，但是一开始它为空或不存在，那么你仅需要设置一些初始值：
+		例子如下：
+			// 例外是使用 Object.freeze()，
+			// 这会阻止修改现有的 property，也意味着响应系统无法再追踪变化。
+			var obj = {
+			  foo: 'bar'
+			}
+			Object.freeze(obj)
+			
+			var vm = new Vue({
+				data:{
+					obj:null,
+					newTodoText: '',
+					visitCount: 0,
+					hideCompletedTodos: false,
+					todos: [],
+					error: null
+				}
+			})
+		除了数据 property，Vue 实例还暴露了一些有用的实例 property 与方法。
+		它们都有前缀 $，以便与用户定义的 property 区分开来。
+		例子：
+			var data = { a: 1 }
+			var vm = new Vue({
+			  el: '#example',
+			  data: data
+			})
+			
+			vm.$data === data // => true
+			vm.$el === document.getElementById('example') // => true
+			
+			// $watch 是一个实例方法
+			vm.$watch('a', function (newValue, oldValue) {
+			  // 这个回调将在 `vm.a` 改变后调用
+			})
+		- 实例生命周期钩子的函数——在Vue实例被创建时初始化过程中运行的函数
+		钩子函数如：
+			created钩子：用来在一个实例被创建后执行
+			destroyed钩子、mounted钩子、updated钩子
+		例子：
+			new Vue({
+				data:{
+					a:1
+				},
+				created:function(){
+					// 'this' 指向 vm 实例
+					console.log('a is:'+this.a)
+				}
+			})
+	-->
+	
+	<!--
+	计算属性和侦听器
+		- 计算属性
+			· 基础例子
+			<div id="example">
+				<p>Original message:"{{message}}"</p>
+				<p>Computed reversed message:"{{reversedMessage}}"</p>
+			</div>
+			
+			var vm = new Vue({
+				el:"#example",
+				data:{
+					message:"Hello"
+				},
+				computed:{
+					// 计算属性的getter
+					reversedMessage: function(){
+						return this.message.split(' ').reverse().join('')
+					}
+				}
+			})
+			
+			这里我们声明了一个计算属性 reversedMessage。
+			我们提供的函数将用作 property vm.reversedMessage 的 getter 函数：
+			console.log(vm.reversedMessage) // => 'olleH'
+			vm.message = 'Goodbye'
+			console.log(vm.reversedMessage) // => 'eybdooG'
+			
+			·计算属性缓存 vs 方法
+			
+			
+			· 计算属性 vs 侦听器
+			
+			
+			· 计算属性的setter
+				计算属性 默认只有getter，在需要时也可提供一个setter
+				例子：
+				//...
+				computed:{
+					//getter
+					get:function(){
+						return this.firstName + ' ' + this.lastName
+					},
+					//setter
+					set:function(newValue){
+						var names = newValue.split(' ')
+						this.firstName = names[0]
+						this.lastName = names[news.length - 1]
+					}
+				}
+		
+		- 侦听器
+		例子：
+		<div>
+			<p>Ask a yes/no question:
+			<input v-model="question">
+			</p>
+			<p>{{answer}}</p>
+		</div>
+		<script>
+			var watchExampleVM = new Vue({
+				el:"#watch-example",
+				data:{
+					question:'',
+					answer:'i can't give u an answer until u ask a question''
+				}，
+				watch:{
+					// 如果 question发生改变。这个函数就会执行
+					question:function(newQuestion, oldQuestion){
+						this.answe = 'waiting for you to stop typing...'
+						this.debouncedGetAnswer()
+					}
+				},
+				created: function () {
+				    // `_.debounce` 是一个通过 Lodash 限制操作频率的函数。
+				    // 在这个例子中，我们希望限制访问 yesno.wtf/api 的频率
+				    // AJAX 请求直到用户输入完毕才会发出。想要了解更多关于
+				    // `_.debounce` 函数 (及其近亲 `_.throttle`) 的知识，
+				    // 请参考：https://lodash.com/docs#debounce
+				    this.debouncedGetAnswer = _.debounce(this.getAnswer, 500)
+				},
+				methods: {
+				  	getAnswer: function () {
+				      if (this.question.indexOf('?') === -1) {
+				        this.answer = 'Questions usually contain a question mark. ;-)'
+				        return
+				      }
+				      this.answer = 'Thinking...'
+				      var vm = this
+				      axios.get('https://yesno.wtf/api')
+				        .then(function (response) {
+				          vm.answer = _.capitalize(response.data.answer)
+				        })
+				        .catch(function (error) {
+				          vm.answer = 'Error! Could not reach the API. ' + error
+				        })
+					    }
+					}
+				})
+			// 在这个示例中，使用 watch 选项允许我们执行异步操作 (访问一个 API)，
+			限制我们执行该操作的频率，并在我们得到最终结果前，设置中间状态。
+		</script>
+	-->
+	
+	<!--
+	Class与Style绑定
+		- 绑定HTML Class
+		· 对象语法
+		例：
+		内联定义
+		1.class 存在与否将取决于数据 property isActive 的 truthiness：
+			<div v-bind:class="{active:isActive}"></div>
+		2.可以在对象中传入更多字段来动态切换多个class
+			<div class="static"
+				v-bind:class="{active:isActive, 'text-danger':hasError}">
+			</div>
+			//...
+			data:{
+				isActive:true,
+				hasError:false
+			}
+			当 isActive 或者 hasError 变化时，class 列表将相应地更新
+		非内联定义：
+		3.	绑定的数据对象不必定义在模板里
+		<div v-bind:class="classObject"></div>
+		
+		data:{
+			classObject:{
+				active:true,
+				'text-danger':false
+			}
+		}
+		4.通过计算属性返回对象
+		<div v-bind:class="classObject"></div>
+		
+		data:{
+			isActive:true,
+			error:null
+		},
+		computed:{
+			classObject:function(){
+				return{
+					active:this.isActive && !this.error,
+					'text-danger':this.error && this.error.type === 'fatal'
+				}
+			}
+		}
+		
+		· 数组语法
+		5.通过将一个数组传给 v-bind:class，以应用一个class列表
+		<div v-bind:class="{activeClass,errorClass}"></div>
+		
+		data:{
+			activeClass:'active',
+			errorClass:'text-danger'
+		}
+		6.根据条件切换列表中的 class，可以用三元表达式:
+		<div v-bind:class="[isActive?activeClass:'', errorClass?]">
+		7.但是这样写多个条件class时繁琐，所以在数组语法中可以使用对象语法
+		<div v-bind:class="[{active:isActive},errorClass]"></div>
+		
+		· 用在组件上
+		在一个自定义组件上使用class property时，这些class将被添加到该组件的根元素上，
+		根元素上已存在的class不会被覆盖
+		例子：
+			Vue.component('my-component', {
+				template:'<p class="foo bar">Hi</p>'
+			})
+			<my-component class="baz boo"></mycomponent>
+			
+			此时html将被渲染为：
+			<p class="foo bar baz boo">Hi</p>
+		对于带数据绑定的class 也同样适用
+		<my-component v-bind:class="{active:isActive}"></my-component>
+		
+		- 绑定内联样式
+		· 对象语法
+		例子：
+		<div v-bind:style="{color:activeColor, fontSize:fontSize+'px}"></div>
+		data:{
+			activeColor:'red',
+			fontSize:30
+		}
+		
+		直接绑定到一个样式对象上：
+		<div v-bind:style="styleObject"></div>
+		data:{
+			styleObject:{
+				color:'red',
+				fontSize:'13px'
+			}
+		}
+		
+		· 数组语法——可以将多个样式对象应用到同一个元素
+		<div v-bind:style="[baseStyles, overridingStyles]"></div>
+		
+		· 自动添加前缀
+		·多重值
+		
+	-->
+	
+	<!--
+	事件处理
+		- 监听事件 —— v-on指令监听DOM事件，并在触发时运行一些Js代码
+		例子：———— 将要处理的逻辑卸载了v-on:click里面
+		<div id = "example-1">
+			<div v-on:click="counter += 1">add 1</div>
+			<p>The button above has been clicked {{ counter }} times.</p>
+		</div>
+		
+		var example1 = new Vue({
+			el:"#example-1",
+			data:{
+				counter:0
+			}
+		})
+		
+		- 事件处理方法
+		当处理逻辑变得很复杂时，直接把js代码写在v-on指令里面是不可行的，
+		v-on指令可以接受一个需要调用的方法名称
+		例子：
+		<div id="example-2">
+			<button v-on:click="greet>Greet</button>
+		</div>
+		
+		var example2 = new Vue({
+			el:'#example-2',
+			data:{
+				name:"Vue,js"
+			},
+			methods:{
+				greet:function(event){
+					// this在方法里指向当前Vue实例
+					alert('Hello' + this.name + '!')
+					// `event` 是原生 DOM 事件
+			      	if (event) {
+			        	alert(event.target.tagName)
+			      	}
+				}
+			}
+		})
+		
+		- 内联处理器中的方法
+		内联js语句中调用方法
+		<button v-on:click="warn('Form cannot be submitted yet.',$event")>
+			submit
+		</button>
+		
+		methods:{
+			warn:function(message.event){
+				// 现在可以访问原生事件对象
+				if(event){
+					event.preventDefault()
+				}
+				alert(message)
+			}
+		}
+		
+		- 事件修饰符
+			在事件处理程序中调用 event.preventDefault() 或 event.stopPropagation() 是非常常见的需求。尽管我们可以在方法中轻松实现这点，
+			但更好的方式是：方法只有纯粹的数据逻辑，而不是去处理 DOM 事件细节。
+			为了解决这个问题，Vue.js 为 v-on 提供了事件修饰符。
+			
+			事件修饰符：
+			.stop
+			.prevent
+			.capture
+			.self
+			.once	//能被用到自定义的组件事件上
+			.passive
+			
+			例子：
+			阻止单击事件继续传播
+			<a v-on:click.stop="doThis"></a>
+			
+			提交事件不再重载页面
+			<form v-on:submit.prevent="onSubmit"></form>
+			
+			修饰符可以串联
+			<a v-on:click.stop.prevent="doThat"></a>
+			
+			只有修饰符
+			<form v-on:submit.prevent></form>
+			
+			添加事件监听器时使用事件捕获模式
+			即内部元素触发的事件先在此处理，然后才交由内部元素进行处理
+			<div v-on:click.capture="doThis">...</div>
+			
+			只当在 event.target 是当前元素自身时触发处理函数
+			即事件不是从内部元素触发的
+			<div v-on:click.self="doThat">...</div>
+			
+		- 按键修饰符
+		例子：
+		<input v-on:keyup.13="submit">
+			为了在必要的情况下支持旧浏览器，Vue 提供了绝大多数常用的按键码的别名：
+			.enter
+			.tab
+			.delete
+			.esc
+			.space
+			.up
+			.down
+			.left
+			.right
+			可以通过全局 config.keyCodes 对象自定义按键修饰符别名：
+			// 可以使用 `v-on:keyup.f1`
+			Vue.config.keyCodes.f1 = 112
+			
+		- 系统修饰键
+		用如下修饰符来实现仅在按下相应按键时才触发鼠标或键盘事件的监听器
+		.ctrl
+		.alt
+		.shift
+		.meta
+		
+		- .exact修饰符——允许你控制由精确的系统修饰符组合触发的事件
+		例子：
+		即使 Alt 或 Shift 被一同按下时也会触发
+		<button v-on:click.ctrl="onClick">A</button>
+		有且只有 Ctrl 被按下的时候才触发
+		<button v-on:click.ctrl.exact="onCtrlClick">A</button>
+		没有任何系统修饰符被按下的时候才触发
+		<button v-on:click.exact="onClick">A</button>
+		
+		- 鼠标按钮修饰符
+		.left
+		.right
+		.middle
+	-->
+	
+	<!--
+	表单输入绑定
+		
+		
+		
+		
+	修饰符
+	.lazy——默认情况下， v-model 在 input 事件中同步输入框的值与数据，但你可以添加一个修饰符 lazy ，从而转变为在 change 事件中同步
+		在 "change" 而不是 "input" 事件中更新 
+		<input v-model.lazy="msg" >
+	.number——想自动将用户的输入值转为 Number 类型（如果原值的转换结果为 NaN 则返回原值），可以添加一个修饰符 number 给 v-model 来处理输入值
+		<input v-model.number="age" type="number">
+	.trim——要自动过滤用户输入的首尾空格，可以添加 trim 修饰符到 v-model 上过滤输入
+		<input v-model.trim="msg">
+	
+		
+		
+		
+	
+	
+	
+	
+	-->
+	
+	<!--
+	组件基础————注意：组件名不能为大写的，否则无法显示
+		- 基本示例：
+		//定义一个名为button-counter的新组件
+		Vue.component('button-counter',{
+			data:function(){
+				return {
+					count:0
+				}
+			},
+			template:'<button v-on:click="count++">You clicked me {{count}} times</button>
+		})
+		
+		创建新组建，注意要创建实例
+		<div id="components-demo">
+			<button-counter></button-counter>
+		</div>
+		
+		创建实例
+		<script>
+			new Vue({el:'#components-demo'})
+		</script>
+		三步缺一不可
+		- 组件的复用
+		可以将组件进行任意次数的复用：
+		<div id="components-demo">
+			<button-counter></button-counter>
+			<button-counter></button-counter>
+		</div>
+		ps:每个组件都会各自独立维护它的 count。因为你每用一次组件，就会有一个它的新实例被创建。
+		
+		注意：
+			data必须是一个函数
+			如：
+			data:funtion(){
+				return{
+					count:0
+				}
+			}
+			否则——若data不是一个函数：则点击一个按钮就会影响到其它所有实例
+			如：
+			data:{
+				count:0
+			}
+		
+		- 组件的组织
+		组件必须先注册以便Vue能够识别，这里组件注册类型又两种：
+			全局注册：
+				全局注册的组件可以用在其被注册之后的任何 (通过 new Vue) 新创建的 Vue 根实例，
+			也包括其组件树中的所有子组件的模板中。
+			例子：
+			Vue.component('my-component-name',{})
+			局部注册
+		
+		- 通过Prop向子组件传递数据
+			Prop 是你可以在组件上注册的一些自定义 attribute。
+			当一个值传递给一个 prop attribute 的时候，它就变成了那个组件实例的一个 property。
+			为了给博文组件传递一个标题，我们可以用一个 props 选项将其包含在该组件可接受的 prop 列表中：
+			· 内联添加
+			例子
+			Vue.component('blog-post',{
+				props:['title'],
+				template:'<h3>{{title}}</h3>'
+			})
+			一个 prop 被注册之后，你就可以像这样把数据作为一个自定义 attribute 传递进来：
+			<blog-post title="My journey with Vue"></blog-post>
+			<blog-post title="Blogging with Vue"></blog-post>
+			<blog-post title="Whysjj with Vue"></blog-post>
+			
+			· 典型应用中，可能在data中又一个博文的数组，并向为每篇博文渲染一个组件
+			例子：
+			使用v-bind来动态传递prop
+			<bolg-post
+				v-for="post in posts"
+				v-bind:key="post.id"
+				v-bind:title="post.title"
+			></blog-post>
+			
+			new Vue({
+				el:'#blog-post-demo',
+				data:[
+				{id:1, title:'My journey with Vue'},
+				{id:2, title:'My xxx with Vue'},
+				{id:3, title:'My ssy with Vue'}
+				]
+			})
+		
+		- 单个根元素
+			当模板包含的东西变多，组件变得越来越复杂（如：博文不只需要标题和内容，还要发布日期、评论等），
+		为每个相关的信息定义一个prop会变得很麻烦，如下：
+		<blog-post
+			v-for="post in posts"
+			v-bind:key="post.id"
+			v-bind:title="post.title"
+			v-bind:content="post.content"
+			v-bind:publishedAt="post.publishedAt"
+			v-bind:comments="post.comments"
+		></blog-post>
+		所以，可以通过重构以下<blog-post>组件，让它变成接收一个单独 post prop:
+			<blog-post
+				v-for="post in posts"
+				v-bind:key="post.id"
+				v-bind:post="post"
+			></blog-post>
+			
+			Vue.component('blog-post',{
+				props:['post'],
+				template:'
+					<div class="blog-post">
+						<h3>{{post.title}}</h3>
+						<div v-html="post.content"></div>
+					</div>
+				'
+			})
+			现在，不论何时为 post 对象添加一个新的 property，
+			它都会自动地在 <blog-post> 内可用。
+			
+		- 监听子组件事件
+			开发 <blog-post> 组件时，它的一些功能可能要求我们和父级组件进行沟通。
+				例如我们可能会引入一个辅助功能来放大博文的字号，同时让页面的其它部分保持默认的字号。
+			在其父组件中，我们可以通过添加一个 postFontSize 数据 property 来支持这个功能
+			new Vue({
+			  el: '#blog-posts-events-demo',
+			  data: {
+			    posts: [/* ... */],
+			    postFontSize: 1
+			  }
+			})
+			
+			· 子组件可以通过调用 内建的 $emit 方法并传入事件名称来触发一个事件：
+			<script>
+				// 子组件通过调用 内建的 $emit 方法并传入事件名称来触发一个事件
+				Vue.component('blog-post-enlarge',{
+					props:['post'],
+					template:'\
+				    <div class="blog-post">\
+				      <h3>{{ post.title }}</h3>\
+				      <button v-on:click="$emit(\'enlarge-text\')">\
+				        Enlarge text\
+				      </button>\
+				      <div v-html="post.content"></div>\
+				    </div>\
+				  '
+				})
+			</script>
+			<div id="blog-posts-enents-demo">
+				<div v-bind:style="{fontSize:postFontSize + 'em'}">
+					<blog-post-enlarge
+						v-for="post in posts"
+						v-bind:key="post.id"
+						v-bind:post="post"
+						v-on:enlarge-text="postFontSize += 0.1"
+					></blog-post-enlarge>
+				</div>
+			</div>
+			<script>
+				new Vue({
+					el:"#blog-posts-enents-demo",
+					data:{
+						postFontSize:0.5,
+						posts:[{
+							id:1,
+							content:'xxxxxx'
+						},{
+							id:2,
+							content:'xx2x'
+						},{
+							id:3,
+							content:'xxx3xx'
+						}]
+					},
+					methods:{
+						onEnlargeText:function(enlargeAmount){
+							this.postFontSize += enlargeAmount
+						}
+					}
+				})
+			</script>
+			
+			· 使用事件抛出一个值
+				
+			
+			· 在组件上使用v-model
+		
+		
+		- 通过插槽分发内容
+		
+		
+		- 动态组件
+		
+		
+		- 解析DOM模板时的注意事项
+			
+			
+			
+			
+			
+	-->
+	<script>
+		//定义组件
+		Vue.component('blog-post',{
+			props:['title'],
+			template:'<h3>{{title}}</h3>'
+		})
+	</script>
+	<div id="blog-post-demo">
+		<blog-post 
+			v-for="post in posts"
+			v-bind:key="post.id"
+			v-bind:title="post.title"
+			></blog-post>
+	</div>
+	<script>
+		//创建Vue实例
+		new Vue({
+			el:'#blog-post-demo',
+			data:{
+				posts:[
+					{id:1, title:'My journey with Vue'},
+					{id:2, title:'My xxx with Vue'},
+					{id:3, title:'My ssy with Vue'}
+				]
+			}
+		})
+	</script>
+	
+	<!--组件基础——监听子组件事件-->
+	<script>
+		// 子组件通过调用 内建的 $emit 方法并传入事件名称来触发一个事件
+		Vue.component('blog-post-enlarge',{
+			props:['post'],
+			template:'\
+		    <div class="blog-post">\
+		      <h3>{{ post.title }}</h3>\
+		      <button v-on:click="$emit(\'enlarge-text\')">\
+		        Enlarge text\
+		      </button>\
+		      <div v-html="post.content"></div>\
+		    </div>\
+		  '
+		})
+	</script>
+	<div id="blog-posts-enents-demo">
+		<div v-bind:style="{fontSize:postFontSize + 'em'}">
+			<blog-post-enlarge
+				v-for="post in posts"
+				v-bind:key="post.id"
+				v-bind:post="post"
+				v-on:enlarge-text="postFontSize += 0.1"
+			></blog-post-enlarge>
+		</div>
+	</div>
+	<script>
+		new Vue({
+			el:"#blog-posts-enents-demo",
+			data:{
+				postFontSize:0.5,
+				posts:[{
+					id:1,
+					content:'xxxxxx'
+				},{
+					id:2,
+					content:'xx2x'
+				},{
+					id:3,
+					content:'xxx3xx'
+				}]
+			},
+			methods:{
+				onEnlargeText:function(enlargeAmount){
+					this.postFontSize += enlargeAmount
+				}
+			}
+		})
+	</script>
+	
+	
+	</body>
+	
+</html>
